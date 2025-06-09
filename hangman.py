@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-import random
+import random, pygame
 
 # List of words to guess for Hangman
 words = ["abruptly", "absurd", "abyss", "affix", "askew", "avenue", "awkward", "bagpipes",
@@ -114,6 +114,51 @@ def hangman_figure():
     if lives < 1:
         canvas.create_line(250, 250, 280, 300, width=3, tags="hangman")
 
+# Define flash_text() to flash text for win or lose
+def flash_text(text, color, count=6):
+    if count > 0:
+        msg = canvas.create_text(250, 30, text=text, font=("Helvetica", 24, "bold"), fill=color, tags="flash")
+        window.after(300, lambda: [canvas.delete(msg), flash_text(text, color, count-1)])
+
+# Define show_confetti() to display confetti after win
+def show_confetti():
+    confetti_pieces = []
+
+    for _ in range(100):
+        x = random.randint(0, 500)
+        y = random.randint(0, 50)
+        color = random.choice(["red", "blue", "green", "yellow", "purple", "orange", "pink"])
+        piece = canvas.create_oval(x, y, x+5, y+5, fill=color, outline="", tags="confetti")
+        confetti_pieces.append(piece)
+
+    def animate_confetti():
+        for piece in confetti_pieces:
+            canvas.move(piece, 0, 5)
+        canvas.update()
+        # check if confetti reached bottom
+        if all(canvas.coords(p)[1] < 400 for p in confetti_pieces):
+            window.after(50, animate_confetti)
+        else:
+            canvas.delete("confetti")
+
+    animate_confetti()
+
+# Define lose_animation() to create animation after each loss
+def lose_animation():
+    x = 250
+    y = 50
+    text = canvas.create_text(x, y, text=selected_word.upper(), fill="red", font=("Helvetica", 28, "bold"), tags="lose_anim")
+
+    def animate_fall():
+        canvas.move(text, 0, 10)
+        canvas.update()
+        if canvas.coords(text)[1] < 400:
+            window.after(50, animate_fall)
+        else:
+            canvas.delete("lose_anim")
+
+    animate_fall()
+
 # Define lets_play() function to allow player to guess the word:
 def lets_play():
     global lives
@@ -131,7 +176,12 @@ def lets_play():
        show_used_letters()
        if win():
            word_label.config(text=selected_word)
-           messagebox.showinfo("Congratulations!", f"You Won!! Hurray!! The word was {selected_word}")
+           flash_text("YOU WIN!", "green")
+           show_confetti()
+           window.after(3000, lambda: messagebox.showinfo("Congratulations!", f"You Won!! Hurray!! The word was {selected_word}"))
+           pygame.mixer.init()
+           pygame.mixer.music.load("win.wav")
+           pygame.mixer.music.play()
            disable_input()
     else:
         lives -= 1
@@ -140,7 +190,12 @@ def lets_play():
         show_used_letters()
         if loss():
             word_label.config(text=selected_word)
-            messagebox.showinfo("Game Over", f"Sorry :( You lost, try again! The word was {selected_word}")
+            flash_text("YOU LOSE!", "red")
+            lose_animation()
+            window.after(3000, lambda: messagebox.showinfo("Game Over", f"Sorry :( You lost, try again! The word was {selected_word}"))
+            pygame.mixer.init()
+            pygame.mixer.music.load("lost.wav")
+            pygame.mixer.music.play()
             disable_input()
     get_letter.focus_set()
 
@@ -188,17 +243,3 @@ hangman_figure()
 
 # Run
 window.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
