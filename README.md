@@ -9,6 +9,8 @@ of lives. A hangman figure is drawn after each incorrect guess and hints are pro
 - Input validation for single letters
 - Display of used letters and lives remaining so player could keep track
 - Color coded lives status - green, orange and red
+- Sound plays for win or loss
+- Animation plays for win or loss
 - Reset button to restart a new game
 - Simple and clean user-friendly interface
 
@@ -16,17 +18,18 @@ of lives. A hangman figure is drawn after each incorrect guess and hints are pro
 - Python 3.13.3
 - Pycharm
 - Tkinter (standrd Python library)
+- Pygame
 
 ## Installation and How to Run:
 1. Clone the Repository:
 
-   git clone https://github.com/yourusername/hangman-tkinter.git
-cd hangman-tkinter
+   <pre> git clone https://github.com/yourusername/hangman-tkinter.git 
+      cd hangman-tkinter </pre>
 
 3. Ensure that Python is Installed:
    - Download here: https://www.python.org/downloads/
    - Run the game with:
-     python hangman.py
+     <pre> python hangman.py </pre>
 
 ## Screenshots:
 <img width="504" alt="Screenshot 2025-05-28 at 8 21 28 PM" src="https://github.com/user-attachments/assets/582c12dd-3c44-4af2-8188-aff3f87bdf61" />
@@ -45,7 +48,6 @@ README.md   #Game instructions and documentation
 ## Future Improvements:
 - Make game look more appealing
 - Add difficiculty levels
-- Add sound efffects for win or lose
 - Store high scores or number of wins
 - Add category selection for words
 
